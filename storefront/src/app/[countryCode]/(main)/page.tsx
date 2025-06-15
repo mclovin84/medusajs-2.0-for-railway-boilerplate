@@ -1,6 +1,6 @@
 import { Metadata } from "next"
-import { getProductsList } from "@/lib/data/products"
-import { getRegion } from "@/lib/data/regions"
+import { getProductsList } from "@/lib/data"
+import { getRegion } from "@/lib/data"
 import CloudPawsClient from "./CloudPawsClient"
 
 export const metadata: Metadata = {
