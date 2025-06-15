@@ -4,10 +4,9 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { ShoppingCart, Leaf, Award, Heart, ArrowRight, Check } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
-export default function CloudPawsLuxury() {
+export default function CloudPawsClient({ products, region }: any) {
   const [scrollY, setScrollY] = useState(0)
   const [cartCount, setCartCount] = useState(0)
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null)
@@ -47,7 +46,17 @@ export default function CloudPawsLuxury() {
     setTimeout(() => setIsSubmitted(false), 3000)
   }
 
-  const products = [
+  // Use the products passed from server component
+  const formattedProducts = products?.slice(0, 3).map((product: any, index: number) => ({
+    id: product.id,
+    name: product.title,
+    price: product.variants?.[0]?.calculated_price?.calculated_amount 
+      ? Math.round(product.variants[0].calculated_price.calculated_amount / 100)
+      : 120,
+    image: product.thumbnail || "/placeholder.svg?height=600&width=600",
+    collection: product.collection?.title || "Signature Series",
+    availability: Math.floor(Math.random() * 3) + 2,
+  })) || [
     {
       id: 1,
       name: "Cashmere Cloud",
@@ -154,10 +163,10 @@ export default function CloudPawsLuxury() {
           </div>
 
           {/* CTA Button */}
-          <Button className="bg-[#6B46C1] hover:bg-[#5B3BA3] text-white px-12 py-6 text-lg font-light rounded-full transition-all duration-300 hover:scale-105 animate-gentle-pulse mb-12">
+          <button className="bg-[#6B46C1] hover:bg-[#5B3BA3] text-white px-12 py-6 text-lg font-light rounded-full transition-all duration-300 hover:scale-105 animate-gentle-pulse mb-12 inline-flex items-center">
             View Collection
             <ArrowRight className="ml-3 w-5 h-5" />
-          </Button>
+          </button>
 
           {/* Social Proof */}
           <p className="text-sm font-light text-gray-500 mb-8">Trusted by 10,000+ discerning cat parents</p>
@@ -184,7 +193,7 @@ export default function CloudPawsLuxury() {
       <section id="products-section" className="py-32 px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-3 gap-16 md:gap-24">
-            {products.map((product, index) => (
+            {formattedProducts.map((product, index) => (
               <div
                 key={product.id}
                 className={`text-center group cursor-pointer transition-all duration-700 ${
@@ -224,12 +233,12 @@ export default function CloudPawsLuxury() {
                       hoveredProduct === product.id ? "opacity-100" : "opacity-0"
                     }`}
                   >
-                    <Button
+                    <button
                       onClick={() => addToCart(product.id)}
                       className="bg-white/95 backdrop-blur-sm text-[#2D2D2D] hover:bg-[#6B46C1] hover:text-white px-8 py-3 rounded-full transition-all duration-300"
                     >
                       Select
-                    </Button>
+                    </button>
                   </div>
                 </div>
 
@@ -272,7 +281,7 @@ export default function CloudPawsLuxury() {
           </div>
 
           <div className="mt-12">
-            <a
+            
               href="#stories"
               className="text-sm font-light text-[#6B46C1] hover:text-[#5B3BA3] transition-colors duration-300 border-b border-[#6B46C1]/30 hover:border-[#5B3BA3] pb-1"
             >
@@ -298,12 +307,12 @@ export default function CloudPawsLuxury() {
                   className="flex-1 px-6 py-4 bg-[#FDFBF7] border border-[#E8E5FF] rounded-full focus:outline-none focus:ring-2 focus:ring-[#6B46C1]/20 focus:border-[#6B46C1] transition-all duration-300 font-light"
                   required
                 />
-                <Button
+                <button
                   type="submit"
-                  className="bg-[#6B46C1] hover:bg-[#5B3BA3] text-white px-8 py-4 rounded-full transition-all duration-300 hover:scale-105"
+                  className="bg-[#6B46C1] hover:bg-[#5B3BA3] text-white px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 inline-flex items-center justify-center"
                 >
                   {isSubmitted ? <Check className="w-5 h-5" /> : "Join"}
-                </Button>
+                </button>
               </div>
             </form>
           </div>
@@ -332,13 +341,13 @@ export default function CloudPawsLuxury() {
       </footer>
 
       {/* Mobile CTA */}
-      <div className="md:hidden mobile-cta">
-        <Button
+      <div className="md:hidden mobile-cta fixed bottom-0 left-0 right-0 p-4 bg-[#FDFBF7]/95 backdrop-blur-sm border-t border-[#E8E5FF]/30">
+        <button
           onClick={() => addToCart(1)}
           className="w-full bg-[#6B46C1] hover:bg-[#5B3BA3] text-white py-4 text-lg rounded-full transition-all duration-300 shadow-2xl"
         >
           View Collection
-        </Button>
+        </button>
       </div>
     </div>
   )
